@@ -1,0 +1,19 @@
+{
+  "name": "我的扩展程序",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "从Google获得信息。",
+  "icons": {
+    "128": "img/refresh.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["js/bg.js","js/jquery-1.7.2.js"]
+  },
+  "permissions": ["http://localhost:8090/*", "https://*.google.com/","bookmarks"],
+  "browser_action": {
+    "default_title": "",
+    "default_icon": "img/refresh.png",
+    "default_popup": "html/index.html"
+  }
+}
