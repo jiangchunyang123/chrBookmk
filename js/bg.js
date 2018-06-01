@@ -4,14 +4,16 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   var bookmarks;
+  var bookMarksCache;
+  var uid = "";
   function getBookmarks(){
       bookmarks = []
-     var tree = chrome.bookmarks.getTree(function(result){
+      chrome.bookmarks.getTree(function(result){
           console.log('tree:',result);
           for(var i=0;i<result.length;i++){
               reversBookmarks(result[i]);
           }
-          syncBook();
+        //  syncBook(123,result);
     });
     return bookmarks;
   }
@@ -20,13 +22,15 @@ document.addEventListener('DOMContentLoaded', function() {
       if(result==null){
           return;
       }
-  
+      //  console.log('result:',result);
       var bookmark = {
           id:result.id == null ? 0 : result.id,
           parentId:result.parentId == null ? 0 : result.parentId,
-          index:result.index == null ? 0 : result.index,
+          idx:result.index == null ? 0 : result.index,
           url:result.url == null ? 'None' : result.url,
-          title:result.title == null ? 'None' : result.title
+          title:result.title == null ? 'None' : result.title,
+          dateAdded:result.dateAdded,
+          dateGroupModified:result.dateGroupModified
       }
   
       bookmarks.push(bookmark)
@@ -40,27 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
   
-  function syncBook(uid){
-      jsonStr = JSON.stringify({data:bookmarks});
-    //   $.ajax({
-    //     type:"get",  
-    //     url:"http://localhost:8090/bookmk/asdasdasd",
-    //     async: "true",
-    //     contentType: 'application/json',
-    //     success:function(result){
-    //             console.log('resultaaa:',result);
-    //   }
-    //   });
-      $.ajax({
-            type : "put" ,      // 此处发送的是PUT请求（可变更为其他需要的请求）
-        //    dataType : "json" ,
-       //   contentType: 'application/json',
-          url: "http://localhost:8090/bookmk/put/333", 
-          async: "true",
-          data: {
-              "bookmarks":jsonStr
-          }, success: function (data,status) {
-              console.log(data);
-          }
-    });
+  function syncBook(uid,tree){
+  
+ 
+  }
+  function uploadBookMark(tree){
+    jsonStr = JSON.stringify({data:tree});
+
+    $.ajax({
+        type : "put" ,    
+        url: "http://localhost:8090/bookmk/put/"+uid, 
+        async: "true",
+        data: {
+            "bookmarks":jsonStr
+        }, success: function (data,status) {
+            console.log(data);
+        }
+  });
   }
